@@ -1,10 +1,13 @@
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef GAME_H
 #define GAME_H
+
 
 #include "bst.h"
 
 typedef enum { ARMOR, SWORD } ItemType;
 typedef enum { PHANTOM, SPIDER, DEMON, GOLEM, COBRA } MonsterType;
+typedef enum { UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3 } Direction;
 
 typedef struct Item {
     char* name;
@@ -61,5 +64,21 @@ void addRoom(GameState* g);
 void initPlayer(GameState* g);
 void playGame(GameState* g);
 void freeGame(GameState* g);
+
+//helper function
+void printMap(Room* rooms);
+static void computeNewCoords(Room* newRoom, int roomDirec);
+static Room* findRoomById(Room* head, int roomID);
+static int isRoomOccupied(Room* head, int x, int y);
+void addMonsterFunc(Room* room);
+char* getItemTypeString(ItemType type);
+char* getMonsterTypeString(MonsterType monType);
+void addItemFunc(Room* room);
+
+//free functions
+static void freeRoom(Room* room);
+static void freePlayer(Player* room);
+static void freeGameState(Player* room);
+
 
 #endif
