@@ -6,6 +6,45 @@
 #include "game.h"
 #include "utils.h"
 
+#define LEGEND_MONSTER 'M'
+#define LEGEND_ITEM    'I'
+#define LEGEND_PRESENT 'V'
+#define LEGEND_ABSENT  'X'
+
+//static functions
+static void displayRoomLegend(Room* room);
+static void displayMap(GameState* g);
+static void computeNewCoords(int roomDirec, int* x, int* y);
+static Room* findRoomById(Room* head, int roomID);
+static int isRoomOccupied(Room* head, int x, int y);
+static void displayRoomAndPlayerStatus(GameState* g);
+
+typedef enum { MOVE = 1, FIGHT = 2, PICKUP = 3, 
+               BAG = 4, DEFEATED = 5, QUIT = 6 } GameAction;
+
+
+// Print the game legend (which rooms contain monsters/items)
+static void displayRoomLegend(Room* room) {//change to room*
+    printf("=== ROOM LEGEND ===\n");
+
+    // Iterate over the linked list of rooms
+    for (Room* r = room; r != NULL; r = r->next) {
+
+        // Determine status chars based on existence (V or X)
+        char mStatus = (r->monster != NULL) ? LEGEND_PRESENT : LEGEND_ABSENT;
+        char iStatus = (r->item != NULL) ? LEGEND_PRESENT : LEGEND_ABSENT;
+
+        // Print using the defined constants for M/I and V/X
+        // Format: ID 1: [M:X] [I:V]
+        printf("ID %d: [%c:%c] [%c:%c]\n",
+            r->id,
+            LEGEND_MONSTER, mStatus,
+            LEGEND_ITEM, iStatus);
+    }
+
+    printf("===================\n");
+}
+
 // Map display functions
 static void displayMap(GameState* g) {
     if (!g->rooms) 
@@ -46,7 +85,27 @@ static void displayMap(GameState* g) {
     free(grid);
 }
 
+// Displays current room details and player status
+static void displayRoomAndPlayerStatus(GameState* g) {
+    //safety check
+    if (g == NULL || g->player == NULL || g->player->currentRoom == NULL)
+        return;
+
+    Room* currRoom = g->player->currentRoom;
+
+    printf("--- Room %d ---\n", currRoom->id);
+    
+    if (currRoom->monster)
+        printf("Monster: %s (HP:%d)\n", currRoom->monster->name, currRoom->monster->hp);
+    
+    if (currRoom->item)
+        printf("Item: %s\n", currRoom->item->name);
+    
+    printf("HP: %d/%d\n", g->player->hp, g->player->maxHp);
+}
+
 void addRoom(GameState* g) {
+    displayMap(g);
     printMap(g->rooms);
     int baseId = getInt("Attach to room ID");
     Room* baseRoom = findRoomById(g->rooms, baseId);
@@ -83,7 +142,7 @@ void addRoom(GameState* g) {
     if (addItem)
         addItemFunc(newRoom);
 
-    print("Created room %d at (%d, %d)", newRoom->id, newRoom->x, newRoom->y);
+    printf("Created room %d at (%d, %d)", newRoom->id, newRoom->x, newRoom->y);
 }
 
 // Helper function to allocate and initialize a monster in the room
@@ -318,5 +377,35 @@ char* getItemTypeString(ItemType type) {
         return "SWORD";
     default:
         return NULL;
+    }
+}
+
+void playGame(GameState* g) {
+    GameAction choice;
+    while (1) {
+        displayMap(g);
+        printSubMenu();
+        choice = (GameAction)getInt(NULL);
+
+        
+    }
+}
+
+void printSubMenu() {
+    printf("1.Move 2.Fight 3.Pickup 4.Bag 5.Defeated 6.Quit\n");
+}
+
+Room* findRoomByCoords(Room* head, int x, int y) {
+    for (Room* r = head; r != NULL; r = r->next) {
+        if (r->x == x && r->y == y) {
+            return r;
+        }
+    }
+    return NULL;
+}
+
+void printMap(Room* rooms) {
+    for (Room* room = rooms; room; room = room->next) {
+        displayRoomLegend(room);
     }
 }

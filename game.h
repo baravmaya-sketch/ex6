@@ -67,13 +67,12 @@ void freeGame(GameState* g);
 
 //helper function
 void printMap(Room* rooms);
-static void computeNewCoords(Room* newRoom, int roomDirec);
-static Room* findRoomById(Room* head, int roomID);
-static int isRoomOccupied(Room* head, int x, int y);
 void addMonsterFunc(Room* room);
 char* getItemTypeString(ItemType type);
 char* getMonsterTypeString(MonsterType monType);
 void addItemFunc(Room* room);
+Room* findRoomByCoords(Room* head, int x, int y);
+void printSubMenu();
 
 //free functions
 static void freeRoom(Room* room);
