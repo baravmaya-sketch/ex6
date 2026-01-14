@@ -19,7 +19,7 @@ BSTNode* bstInsert(BSTNode* root, void* data, int (*cmp)(void*, void*)) {
     if (root == NULL)
         return createNode(data);
 
-    if (cmp(root->data, data) < 0)
+    if (cmp(data, root->data) < 0)
         root->left = bstInsert(root->left, data, cmp);
     else
         root->right = bstInsert(root->right, data, cmp);
@@ -54,4 +54,37 @@ void bstFree(BSTNode* root, void (*freeData)(void*)) {
         freeData(root->data);
 
     free(root);
+}
+
+void bstInorder(BSTNode* root, void (*print)(void*)) {
+    if (!root)
+        return;
+ 
+    bstInorder(root->left, print);
+    
+    if (print)
+        print(root->data);
+    
+    bstInorder(root->right, print);          
+}
+
+void bstPreorder(BSTNode* root, void (*print)(void*)) {
+    if (!root)
+        return;
+
+    if (print)
+        print(root->data);
+
+    bstPreorder(root->left, print);
+    bstPreorder(root->right, print);
+}
+
+void bstPostorder(BSTNode* root, void (*print)(void*)) {
+    if (!root)
+        return;
+
+    bstPostorder(root->left, print);
+    bstPostorder(root->right, print);
+    if (print)
+        print(root->data);
 }
