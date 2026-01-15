@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-int getInt(const char* prompt);
+int getIntInternal(const char* prompt, int* outVal);
 char* getString(const char* prompt);
 
 #endif

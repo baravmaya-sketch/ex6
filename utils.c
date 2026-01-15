@@ -4,6 +4,7 @@
 #include <string.h>
 #include "utils.h"
 
+//gets string from user
 char* getString(const char* prompt) {
     if (prompt != NULL) {
         printf("%s", prompt);
@@ -56,30 +57,24 @@ char* getString(const char* prompt) {
 }
 
 //gets integer input from user
-int getInt(const char* prompt) {
-    int value;
+int getIntInternal(const char* prompt, int* outVal) {
+    if (prompt) printf("%s", prompt);
 
-    // Display the prompt to the user if it's not NULL
-    if (prompt != NULL) {
-        printf("%s", prompt);
+    int temp;
+    // scanf returns 1 if it successfully read one integer
+    if (scanf("%d", &temp) != 1) {
+        return 0; // EOF or Bad Input
     }
 
-    // Loop until a valid integer is successfully read.
-    // scanf returns the number of items converted, so we wait for 1.
-    while (scanf("%d", &value) != 1) {
-        // Input was not an integer (e.g., user typed characters)
-        printf("Invalid input. Please enter a number: ");
-
-        // Clear the input buffer: consume characters until a newline is found
-        while (getchar() != '\n');
-    }
-
-    // Clear the trailing newline character (Enter key) left in the buffer.
-    // This prevents skipping future input prompts.
-    char ch = getchar();
+    // Clear buffer
+    int ch = getchar();
     while (ch != '\n' && ch != EOF) {
         ch = getchar();
     }
 
-    return value;
+    // Check if EOF happened during clear
+    if (ch == EOF) return 0;
+
+    *outVal = temp; // Set the value
+    return 1; // Success
 }

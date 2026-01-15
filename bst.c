@@ -56,6 +56,7 @@ void bstFree(BSTNode* root, void (*freeData)(void*)) {
     free(root);
 }
 
+//prints in order
 void bstInorder(BSTNode* root, void (*print)(void*)) {
     if (!root)
         return;
@@ -68,6 +69,7 @@ void bstInorder(BSTNode* root, void (*print)(void*)) {
     bstInorder(root->right, print);          
 }
 
+//prints preorder
 void bstPreorder(BSTNode* root, void (*print)(void*)) {
     if (!root)
         return;
@@ -79,6 +81,7 @@ void bstPreorder(BSTNode* root, void (*print)(void*)) {
     bstPreorder(root->right, print);
 }
 
+//prints post order
 void bstPostorder(BSTNode* root, void (*print)(void*)) {
     if (!root)
         return;
@@ -87,4 +90,18 @@ void bstPostorder(BSTNode* root, void (*print)(void*)) {
     bstPostorder(root->right, print);
     if (print)
         print(root->data);
+}
+
+//search for node equal data
+void* bstFind(BSTNode* root, void* data, int (*cmp)(void*, void*)) {
+    BSTNode* iterNode = root;
+
+    while (iterNode) {
+        int res = cmp(data, iterNode->data);
+        if (res == 0)
+            return iterNode->data;
+        iterNode = (res < 0) ? iterNode->left : iterNode->right;
+    }
+
+    return NULL;
 }

@@ -66,18 +66,18 @@ void playGame(GameState* g);
 void freeGame(GameState* g);
 
 //helper function
-void printMap(Room* rooms);
-void addMonsterFunc(Room* room);
+void printLegend(Room* rooms);
+void addMonsterFunc(Room* room, GameState* g);
 char* getItemTypeString(ItemType type);
 char* getMonsterTypeString(MonsterType monType);
-void addItemFunc(Room* room);
+void addItemFunc(Room* room, GameState* g);
 Room* findRoomByCoords(Room* head, int x, int y);
-void printSubMenu();
+void printGameOptions();
+void displayRoomAndPlayerStatus(GameState* g);
+char* stringChooseDirection();
 
 //free functions
 static void freeRoom(Room* room);
-static void freePlayer(Player* room);
-static void freeGameState(Player* room);
-
-
+static void freePlayer(Player* player);
+static void freeGameState(GameState* game);
 #endif
